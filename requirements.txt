@@ -1,0 +1,3 @@
+pandas
+numpy
+tkinterdnd2
