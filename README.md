@@ -116,4 +116,44 @@
     def search_table(self):
         pass
 
-### 
+### Application 06 Drap and drop files
+
+        def _parse_drop_file(self, filename):
+        # '/home/rodrigo/Documentos/PythonProjects/CONINFOR2022/Datasets/PS4_GamesSales.csv /home/rodrigo/Documentos/PythonProjects/CONINFOR2022/Datasets/XboxOne_GameSales.csv'
+        size = len(filename)
+        res = []  # list of filepath
+        name = ""
+        indx = 0
+
+        while indx < size:
+            if filename[indx] == "{":
+                j = indx + 1
+                while filename[j] != "}":
+                    name += filename[j]
+                    j += 1
+                res.append(name)
+                name == ""
+                indx = j
+
+            elif filename[indx] ==" " and name != "":
+                res.append(name)
+                name = ""
+            elif filename[indx] != " ":
+                name += filename[indx]
+            indx += 1
+        if name != "":
+            res.append(name)
+        return res
+
+        
+        def drop_inside_list_box(self, event):
+            file_paths = self._parse_drop_file(event.data)
+            current_list_box_items = set(self.file_names_listbox.get(0, "end"))
+            for file_path in file_paths:
+                if file_path.endswith(".csv"):
+                    path_object = Path(file_path)
+                    file_name = path_object.name
+                    if file_name not in current_list_box_items:
+                        self.file_names_listbox.insert("end", file_name)
+                        self.path_map[file_name] = file_path
+

@@ -1,4 +1,5 @@
 import tkinter as tk
+from pathlib import Path
 from tkinter import ttk
 from tkinter.ttk import Frame
 import pandas as pd
@@ -30,28 +31,28 @@ class DataTable(ttk.Treeview):
         scroll_x.pack(side="bottom", fill="x")
         self.stored_dataframe = pd.DataFrame()
 
-    def set_data_table(self,dataframe):
+    def set_data_table(self, dataframe):
         self.stored_dataframe = dataframe
         self._draw_table(dataframe)
 
-    def _draw_table(self,dataframe):
+    def _draw_table(self, dataframe):
         self.delete(*self.get_children())
         columns = list(dataframe.columns)
         self.__setitem__("column", columns)
-        self.__setitem__("show","headings")
+        self.__setitem__("show", "headings")
 
         for col in columns:
-            self.heading(col,text=col)
+            self.heading(col, text=col)
 
         df_rows = dataframe.to_numpy().to_list()
         for row in df_rows:
-            self.insert("","end", values=row)
+            self.insert("", "end", values=row)
         return None
 
-    def find_value(self,pairs):
+    def find_value(self, pairs):
         # pairs is a dictinary
         new_df = self.stored_dataframe
-        for col,value in pairs.items():
+        for col, value in pairs.items():
             query_string = f"{col}.str.contains('{value}')"
             new_df = new_df.query(query_string, engine="python")
 
@@ -68,8 +69,8 @@ class SearchPage(tk.Frame):
         self.file_names_listbox = tk.Listbox(parent, selectmode=tk.SINGLE, background="#2f9599")
         self.file_names_listbox.place(relheight=1, relwidth=0.20)
         self.file_names_listbox.drop_target_register(DND_FILES)
-        self.file_names_listbox.dnd_bind("<<Drop>>",self.drop_inside_list_box)
-        self.file_names_listbox.bind("<Double-1>",self._display_file)
+        self.file_names_listbox.dnd_bind("<<Drop>>", self.drop_inside_list_box)
+        self.file_names_listbox.bind("<Double-1>", self._display_file)
 
         self.search_entrybox = tk.Entry(parent)
         self.search_entrybox.place(relx=0.23, relwidth=0.75, y=650)
@@ -79,15 +80,50 @@ class SearchPage(tk.Frame):
         self.data_table = DataTable(parent)
         self.data_table.place(rely=0.05, relx=0.23, relwidth=0.75, relheight=0.89)
 
-    def drop_inside_list_box(self,event):
-        pass
+        self.path_map = {}
+
+    def drop_inside_list_box(self, event):
+        file_paths = self._parse_drop_file(event.data)
+        current_list_box_items = set(self.file_names_listbox.get(0, "end"))
+        for file_path in file_paths:
+            if file_path.endswith(".csv"):
+                path_object = Path(file_path)
+                file_name = path_object.name
+                if file_name not in current_list_box_items:
+                    self.file_names_listbox.insert("end", file_name)
+                    self.path_map[file_name] = file_path
 
     # double click in display file show data in TreeView
-    def _display_file(self,event):
+    def _display_file(self, event):
         pass
 
     def _parse_drop_file(self, filename):
-        pass
+        # '/home/rodrigo/Documentos/PythonProjects/CONINFOR2022/Datasets/PS4_GamesSales.csv /home/rodrigo/Documentos/PythonProjects/CONINFOR2022/Datasets/XboxOne_GameSales.csv'
+        size = len(filename)
+        res = []  # list of filepath
+        name = ""
+        indx = 0
+
+        while indx < size:
+            if filename[indx] == "{":
+                j = indx + 1
+                while filename[j] != "}":
+                    name += filename[j]
+                    j += 1
+                res.append(name)
+                name == ""
+                indx = j
+
+            elif filename[indx] ==" " and name != "":
+                res.append(name)
+                name = ""
+            elif filename[indx] != " ":
+                name += filename[indx]
+            indx += 1
+        if name != "":
+            res.append(name)
+        return res
+
 
     def search_table(self):
         pass
