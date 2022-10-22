@@ -44,7 +44,7 @@ class DataTable(ttk.Treeview):
         for col in columns:
             self.heading(col, text=col)
 
-        df_rows = dataframe.to_numpy().to_list()
+        df_rows = dataframe.to_numpy().tolist()
         for row in df_rows:
             self.insert("", "end", values=row)
         return None
@@ -95,7 +95,10 @@ class SearchPage(tk.Frame):
 
     # double click in display file show data in TreeView
     def _display_file(self, event):
-        pass
+        file_name = self.file_names_listbox.get(self.file_names_listbox.curselection())
+        path = self.path_map[file_name]
+        df = pd.read_csv(path, encoding='latin-1')
+        self.data_table.set_data_table(df)
 
     def _parse_drop_file(self, filename):
         # '/home/rodrigo/Documentos/PythonProjects/CONINFOR2022/Datasets/PS4_GamesSales.csv /home/rodrigo/Documentos/PythonProjects/CONINFOR2022/Datasets/XboxOne_GameSales.csv'
@@ -114,7 +117,7 @@ class SearchPage(tk.Frame):
                 name == ""
                 indx = j
 
-            elif filename[indx] ==" " and name != "":
+            elif filename[indx] == " " and name != "":
                 res.append(name)
                 name = ""
             elif filename[indx] != " ":
@@ -123,7 +126,6 @@ class SearchPage(tk.Frame):
         if name != "":
             res.append(name)
         return res
-
 
     def search_table(self):
         pass
