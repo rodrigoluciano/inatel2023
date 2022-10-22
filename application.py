@@ -57,9 +57,6 @@ class DataTable(ttk.Treeview):
 
         self._draw_table(new_df)
 
-
-
-
     def reset_table(self):
         self._draw_table(self.stored_dataframe)
 
@@ -71,16 +68,29 @@ class SearchPage(tk.Frame):
         self.file_names_listbox = tk.Listbox(parent, selectmode=tk.SINGLE, background="#2f9599")
         self.file_names_listbox.place(relheight=1, relwidth=0.20)
         self.file_names_listbox.drop_target_register(DND_FILES)
-        self.file_names_listbox.dnd_bind("<<Drop>>")
-        self.file_names_listbox.bind("<Double-1>")
+        self.file_names_listbox.dnd_bind("<<Drop>>",self.drop_inside_list_box)
+        self.file_names_listbox.bind("<Double-1>",self._display_file)
 
         self.search_entrybox = tk.Entry(parent)
         self.search_entrybox.place(relx=0.23, relwidth=0.75, y=650)
-        self.search_entrybox.bind("<Return>")
+        self.search_entrybox.bind("<Return>", self.search_table())
 
         # connect to application - Treeview
         self.data_table = DataTable(parent)
         self.data_table.place(rely=0.05, relx=0.23, relwidth=0.75, relheight=0.89)
+
+    def drop_inside_list_box(self,event):
+        pass
+
+    # double click in display file show data in TreeView
+    def _display_file(self,event):
+        pass
+
+    def _parse_drop_file(self, filename):
+        pass
+
+    def search_table(self):
+        pass
 
 
 '''chamada da função que inicia o programa'''

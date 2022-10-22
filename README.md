@@ -39,7 +39,9 @@
             self.file_names_listbox.place(relheight=1, relwidth=0.20)
             self.file_names_listbox.drop_target_register(DND_FILES)
             self.file_names_listbox.dnd_bind("<<Drop>>")
+            # self.file_names_listbox.dnd_bind("<<Drop>>",self.drop_inside_list_box)
             self.file_names_listbox.bind("<Double-1>")
+            # self.file_names_listbox.bind("<Double-1>",self._display_file)
     
             self.search_entrybox = tk.Entry(parent)
             self.search_entrybox.place(relx=0.23, relwidth=0.75, y=650 )
@@ -58,4 +60,60 @@
             scroll_x.pack(side="bottom", fill="x")
             self.stored_dataframe = pd.DataFrame()
 
+### Application 04 - Custom widget Methods
+    # class DataTable(ttk.Treeview):
+    #   self.stored_dataframe = pd.DataFrame()
+    # continue here ...
 
+    def set_data_table(self,dataframe):
+        self.stored_dataframe = dataframe
+        self._draw_table(dataframe)
+
+    def _draw_table(self,dataframe):
+        self.delete(*self.get_children())
+        columns = list(dataframe.columns)
+        self.__setitem__("column", columns)
+        self.__setitem__("show","headings")
+
+        for col in columns:
+            self.heading(col,text=col)
+
+        df_rows = dataframe.to_numpy().to_list()
+        for row in df_rows:
+            self.insert("","end", values=row)
+        return None
+
+    def find_value(self,pairs):
+        # pairs is a dictinary
+        new_df = self.stored_dataframe
+        for col,value in pairs.items():
+            query_string = f"{col}.str.contains('{value}')"
+            new_df = new_df.query(query_string, engine="python")
+
+        self._draw_table(new_df)
+
+    def reset_table(self):
+        self._draw_table(self.stored_dataframe)
+
+### Application 05 - Biding Methods
+    
+    # class SearchPage(tk.Frame):
+    # connect to application - Treeview
+    # self.data_table = DataTable(parent)
+    # self.data_table.place(rely=0.05, relx=0.23, relwidth=0.75, relheight=0.89)
+    #continue ...
+    
+    def drop_inside_list_box(self,event):
+        pass
+
+    # double click in display file show data in TreeView
+    def _display_file(self,event):
+        pass
+
+    def _parse_drop_file(self, filename):
+        pass
+
+    def search_table(self):
+        pass
+
+### 
