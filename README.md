@@ -45,3 +45,17 @@
             self.search_entrybox.place(relx=0.23, relwidth=0.75, y=650 )
             self.search_entrybox.bind("<Return>")
 
+### Application 03 - Create DataTable ro recive data
+
+    # class to prepare dataframe 
+    class DataTable(ttk.Treeview):
+        def __init__(self, parent):
+            super().__init__(parent)
+            scroll_y = tk.Scrollbar(self, orient="vertical", command=self.yview)
+            scroll_x = tk.Scrollbar(self, orient="horizontal", command=self.xview)
+            self.config(yscrollcommand=scroll_y.set, xscrollcommand=scroll_x.set)
+            scroll_y.pack(side="right", fill="y")
+            scroll_x.pack(side="bottom", fill="x")
+            self.stored_dataframe = pd.DataFrame()
+
+
