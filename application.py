@@ -12,7 +12,7 @@ específicos da plataforma . '''
 class Application(TkinterDnD.Tk):
     def __init__(self):
         super().__init__()
-        self.title("CSV Viewer")
+        self.title("Coninfor-2022 CVS DataScience")
         self.main_frame = tk.Frame(self)
         self.main_frame.pack(fill="both", expand="true")
         self.geometry("1000x690")
@@ -29,6 +29,39 @@ class DataTable(ttk.Treeview):
         scroll_y.pack(side="right", fill="y")
         scroll_x.pack(side="bottom", fill="x")
         self.stored_dataframe = pd.DataFrame()
+
+    def set_data_table(self,dataframe):
+        self.stored_dataframe = dataframe
+        self._draw_table(dataframe)
+
+    def _draw_table(self,dataframe):
+        self.delete(*self.get_children())
+        columns = list(dataframe.columns)
+        self.__setitem__("column", columns)
+        self.__setitem__("show","headings")
+
+        for col in columns:
+            self.heading(col,text=col)
+
+        df_rows = dataframe.to_numpy().to_list()
+        for row in df_rows:
+            self.insert("","end", values=row)
+        return None
+
+    def find_value(self,pairs):
+        # pairs is a dictinary
+        new_df = self.stored_dataframe
+        for col,value in pairs.items():
+            query_string = f"{col}.str.contains('{value}')"
+            new_df = new_df.query(query_string, engine="python")
+
+        self._draw_table(new_df)
+
+
+
+
+    def reset_table(self):
+        self._draw_table(self.stored_dataframe)
 
 
 # structural page to recieve serch data
