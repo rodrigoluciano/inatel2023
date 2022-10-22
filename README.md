@@ -78,7 +78,7 @@
         for col in columns:
             self.heading(col,text=col)
 
-        df_rows = dataframe.to_numpy().to_list()
+        df_rows = dataframe.to_numpy().tolist()
         for row in df_rows:
             self.insert("","end", values=row)
         return None
@@ -157,3 +157,6 @@
                         self.file_names_listbox.insert("end", file_name)
                         self.path_map[file_name] = file_path
 
+### Application 07 Display DataFrame in widget
+
+    
