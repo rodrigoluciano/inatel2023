@@ -6,6 +6,7 @@ específicos da plataforma . '''
 
 class Application(TkinterDnD.Tk):
     '''Sobrescrita do método'''
+
     def __init__(self):
         super().__init__()
 
@@ -14,6 +15,7 @@ class Application(TkinterDnD.Tk):
         self.main_frame = tk.Frame(self)
         self.main_frame.pack(fill="both", expand="true")
         self.geometry("900x800")
+
 
 '''chamada da função que inicia o programa'''
 if __name__ == '__main__':
