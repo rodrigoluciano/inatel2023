@@ -159,4 +159,30 @@
 
 ### Application 07 Display DataFrame in widget
 
+    # double click in display file show data in TreeView
+    def _display_file(self, event):
+        file_name = self.file_names_listbox.get(self.file_names_listbox.curselection())
+        path = self.path_map[file_name]
+        df = pd.read_csv(path, encoding='latin-1')
+        self.data_table.set_data_table(df)
+
+### Application 08 Search Bar value
+
+        def search_table(self, event):
+        # column value. [[column,value],column2=value2]....
+        entry = self.search_entrybox.get()
+        if entry == "":
+            self.data_table.reset_table()
+        else:
+            entry_split = entry.split(",")
+            column_value_pairs = {}
+            for pair in entry_split:
+                pair_split = pair.split("=")
+                if len(pair_split) == 2:
+                    col = pair_split[0]
+                    lookup_value = pair_split[1]
+                    column_value_pairs[col] = lookup_value
+            self.data_table.find_value(pairs=column_value_pairs)
+    
+
     
