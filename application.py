@@ -31,7 +31,7 @@ class DataTable(ttk.Treeview):
         scroll_x.pack(side="bottom", fill="x")
         self.stored_dataframe = pd.DataFrame()
 
-    def set_data_table(self, dataframe):
+    def set_datatable(self, dataframe):
         self.stored_dataframe = dataframe
         self._draw_table(dataframe)
 
@@ -74,7 +74,7 @@ class SearchPage(tk.Frame):
 
         self.search_entrybox = tk.Entry(parent)
         self.search_entrybox.place(relx=0.23, relwidth=0.75, y=650)
-        self.search_entrybox.bind("<Return>", self.search_table())
+        self.search_entrybox.bind("<Return>", self.search_table)
 
         # connect to application - Treeview
         self.data_table = DataTable(parent)
@@ -98,7 +98,7 @@ class SearchPage(tk.Frame):
         file_name = self.file_names_listbox.get(self.file_names_listbox.curselection())
         path = self.path_map[file_name]
         df = pd.read_csv(path, encoding='latin-1')
-        self.data_table.set_data_table(df)
+        self.data_table.set_datatable(dataframe=df)
 
     def _parse_drop_file(self, filename):
         # '/home/rodrigo/Documentos/PythonProjects/CONINFOR2022/Datasets/PS4_GamesSales.csv /home/rodrigo/Documentos/PythonProjects/CONINFOR2022/Datasets/XboxOne_GameSales.csv'
@@ -127,8 +127,21 @@ class SearchPage(tk.Frame):
             res.append(name)
         return res
 
-    def search_table(self):
-        pass
+    def search_table(self, event):
+        # column value. [[column,value],column2=value2]....
+        entry = self.search_entrybox.get()
+        if entry == "":
+            self.data_table.reset_table()
+        else:
+            entry_split = entry.split(",")
+            column_value_pairs = {}
+            for pair in entry_split:
+                pair_split = pair.split("=")
+                if len(pair_split) == 2:
+                    col = pair_split[0]
+                    lookup_value = pair_split[1]
+                    column_value_pairs[col] = lookup_value
+            self.data_table.find_value(pairs=column_value_pairs)
 
 
 '''chamada da função que inicia o programa'''
