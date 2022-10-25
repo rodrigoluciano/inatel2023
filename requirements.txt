@@ -1,3 +1,4 @@
 pandas
 numpy
 TkinterDnD2
+python-tkdnd
